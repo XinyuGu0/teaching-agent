@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/* ===========================================
+   Marquee Animation
+   =========================================== */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+/* ===========================================
+   CSS Custom Properties (Design Tokens)
+   =========================================== */
+:root {
+  /* Primary Colors */
+  --color-primary: #409eff;
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #66b1ff;
+  
+  /* Background & Foreground */
+  --color-background: #ffffff;
+  --color-foreground: #1f2937;
+  
+  /* Muted Colors */
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #6b7280;
+  
+  /* Border & Ring */
+  --color-border: #e5e7eb;
+  --color-ring: #409eff;
+  
+  /* Animation */
+  --marquee-duration: 40s;
+}
+
+/* ===========================================
+   Utility Classes
+   =========================================== */
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #111827;
+    --color-foreground: #f9fafb;
+    --color-muted: #1f2937;
+    --color-muted-foreground: #9ca3af;
+    --color-border: #374151;
+  }
+}
+
+/* ===========================================
+   Alert-like Toast (Element Plus Message Override)
+   =========================================== */
+.el-message {
+  --toast-bg: #0f172a;
+  --toast-text: #e5e7eb;
+  --toast-border: rgba(148, 163, 184, 0.28);
+  --toast-accent: #94a3b8;
+  --toast-soft: rgba(148, 163, 184, 0.14);
+
+  border-radius: 12px !important;
+  border: 1px solid var(--toast-border) !important;
+  background: var(--toast-bg) !important;
+  color: var(--toast-text) !important;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, 0.35) !important;
+  padding: 10px 12px !important;
+  min-height: 46px;
+  backdrop-filter: blur(3px);
+}
+
+.el-message::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--toast-accent);
+  border-radius: 12px 0 0 12px;
+}
+
+.el-message .el-message__icon {
+  color: var(--toast-accent) !important;
+  background: var(--toast-soft);
+  border-radius: 999px;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+}
+
+.el-message .el-message__content {
+  color: var(--toast-text) !important;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: .1px;
+}
+
+.el-message .el-message__closeBtn {
+  color: #94a3b8 !important;
+}
+
+.el-message .el-message__closeBtn:hover {
+  color: #e2e8f0 !important;
+}
+
+.el-message--success {
+  --toast-accent: #22c55e;
+  --toast-soft: rgba(34, 197, 94, 0.16);
+}
+
+.el-message--warning {
+  --toast-accent: #f59e0b;
+  --toast-soft: rgba(245, 158, 11, 0.16);
+}
+
+.el-message--error {
+  --toast-accent: #ef4444;
+  --toast-soft: rgba(239, 68, 68, 0.16);
+}
+
+.el-message--info {
+  --toast-accent: #a78bfa;
+  --toast-soft: rgba(167, 139, 250, 0.16);
+}

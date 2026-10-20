@@ -1,0 +1,9 @@
+# Historical/experimental integrations; not imported by the main app.
+# Install only when maintaining features that need them.
+zhipuai>=2.1.5
+langchain>=0.1.0
+langchain-community>=0.0.20
+sentence-transformers>=2.3.0
+docxtpl>=0.16.7
+pdfplumber>=0.10.0
+opencv-python>=4.8.0

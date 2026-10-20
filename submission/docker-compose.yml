@@ -1,0 +1,125 @@
+# ============================================================
+#  AI-PPT-Platform 部署编排
+#  技术栈：Vue3 + FastAPI + PostgreSQL + Redis + ChromaDB + Celery
+# ============================================================
+version: "3.9"
+
+services:
+  # ---------- 前端：Vue3 + Vite ----------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-ppt-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ---------- 后端：FastAPI + Uvicorn ----------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai-ppt-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - backend-data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ---------- Celery Worker：异步任务处理 ----------
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai-ppt-celery
+    command: celery -A app.celery_app worker --loglevel=info --concurrency=2
+    env_file:
+      - ./backend/.env
+    volumes:
+      - backend-data:/app/data
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ---------- PostgreSQL：主数据库 ----------
+  postgres:
+    image: postgres:16-alpine
+    container_name: ai-ppt-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: guowaibao
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ---------- Redis：缓存 + Celery Broker ----------
+  redis:
+    image: redis:7-alpine
+    container_name: ai-ppt-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ---------- OnlyOffice Document Server ----------
+  onlyoffice:
+    image: onlyoffice/documentserver:8.2
+    container_name: ai-ppt-onlyoffice
+    ports:
+      - "8080:80"
+    environment:
+      JWT_ENABLED: "false"
+    volumes:
+      - onlyoffice-data:/var/lib/onlyoffice
+      - onlyoffice-logs:/var/log/onlyoffice
+    networks:
+      - app-network
+    restart: unless-stopped
+
+# ---------- 持久化卷 ----------
+volumes:
+  postgres-data:
+  redis-data:
+  backend-data:
+  onlyoffice-data:
+  onlyoffice-logs:
+
+# ---------- 网络 ----------
+networks:
+  app-network:
+    driver: bridge

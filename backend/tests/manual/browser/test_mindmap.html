@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>思维导图测试</title>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.15.4/dist/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.15.4/dist/browser/index.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .mindmap-container {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    #mindmap {
+      width: 100%;
+      height: 100%;
+    }
+    .controls {
+      margin-top: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #409EFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #66b1ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>思维导图渲染测试</h1>
+
+    <div class="mindmap-container">
+      <svg id="mindmap"></svg>
+    </div>
+
+    <div class="controls">
+      <button onclick="renderExample1()">示例1: Python基础</button>
+      <button onclick="renderExample2()">示例2: Android开发</button>
+      <button onclick="renderExample3()">示例3: 简单层级</button>
+    </div>
+  </div>
+
+  <script>
+    const { Transformer } = window.markmap;
+    const { Markmap } = window.markmap;
+
+    let markmapInstance = null;
+
+    function renderMindmap(markdown) {
+      const transformer = new Transformer();
+      const { root } = transformer.transform(markdown);
+
+      const svg = document.getElementById('mindmap');
+
+      if (markmapInstance) {
+        markmapInstance.setData(root);
+        markmapInstance.fit();
+      } else {
+        markmapInstance = Markmap.create(svg, {
+          duration: 500,
+          maxWidth: 300,
+          color: (node) => {
+            const colors = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4'];
+            return colors[node.state.depth % colors.length];
+          }
+        }, root);
+        markmapInstance.fit();
+      }
+    }
+
+    function renderExample1() {
+      const markdown = `# Python编程基础
+
+## 第一章：入门
+### Python简介
+### 安装配置
+### 第一个程序
+
+## 第二章：基础语法
+### 变量类型
+### 运算符
+### 控制流程
+
+## 第三章：函数
+### 函数定义
+### 参数传递
+### 返回值
+
+## 第四章：数据结构
+### 列表
+### 字典
+### 集合`;
+
+      renderMindmap(markdown);
+    }
+
+    function renderExample2() {
+      const markdown = `# Android移动开发
+
+## 基础知识
+### Java基础
+### Android架构
+### 开发环境
+
+## UI设计
+### 布局管理
+### 控件使用
+### 事件处理
+
+## 数据存储
+### SharedPreferences
+### SQLite数据库
+### 文件存储
+
+## 网络通信
+### HTTP请求
+### JSON解析
+### 异步处理`;
+
+      renderMindmap(markdown);
+    }
+
+    function renderExample3() {
+      const markdown = `# 主题
+
+## 第一部分
+### 子主题1
+### 子主题2
+
+## 第二部分
+### 子主题3
+### 子主题4`;
+
+      renderMindmap(markdown);
+    }
+
+    // 默认渲染示例1
+    renderExample1();
+  </script>
+</body>
+</html>

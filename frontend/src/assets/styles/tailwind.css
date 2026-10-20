@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* 自定义动画 */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+/* 自定义颜色变量 */
+:root {
+  --color-primary: #409eff;
+  --color-primary-foreground: #ffffff;
+  --color-background: #ffffff;
+  --color-foreground: #1f2937;
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #6b7280;
+}

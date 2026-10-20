@@ -1,0 +1,45 @@
+# Installed dependencies and builds
+node_modules/
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+# Local configuration, never commit secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+.claude/
+.vscode/
+.idea/
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+# Local application data and generated artifacts
+backend/data/
+backend/instance/
+backend/app/tmp/
+backend/ppt/
+.local-artifacts/
+*.db
+*.sqlite
+*.sqlite3
+*.db-*
+*.sqlite3-*
+*.log
+test_output/
+test_outputs/
+# Miscellaneous
+.DS_Store
+Thumbs.db
+*.pid
+*.swp
+celerybeat-schedule
+
+# Generated outputs from third-party examples (keep locally)
+backend/OfficeCLI-main/examples/**/outputs/
