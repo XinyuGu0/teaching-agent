@@ -1,0 +1,2 @@
+# Exclude bundled OfficeCLI from language statistics
+backend/OfficeCLI-main/** linguist-vendored
